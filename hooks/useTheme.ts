@@ -1,4 +1,5 @@
 import { useColorScheme } from "react-native";
+import { useMemo, useCallback } from "react";
 import { Colors, ColorName, palette } from "@/constants/Colors";
 
 /**
@@ -8,37 +9,53 @@ import { Colors, ColorName, palette } from "@/constants/Colors";
 export function useTheme() {
   const colorScheme = useColorScheme() ?? "light";
 
+  // Memoize the theme colors to prevent unnecessary re-renders
+  const themeColors = useMemo(() => Colors[colorScheme], [colorScheme]);
+
   // Get a color from the current theme
-  const getColor = (colorName: ColorName) => {
-    return Colors[colorScheme][colorName];
-  };
+  const getColor = useCallback(
+    (colorName: ColorName) => {
+      return Colors[colorScheme][colorName];
+    },
+    [colorScheme]
+  );
 
   // Get a color from a specific theme
-  const getThemeColor = (theme: "light" | "dark", colorName: ColorName) => {
-    return Colors[theme][colorName];
-  };
+  const getThemeColor = useCallback(
+    (theme: "light" | "dark", colorName: ColorName) => {
+      return Colors[theme][colorName];
+    },
+    []
+  );
 
   // Get a color directly from the palette
-  const getPaletteColor = (colorName: keyof typeof palette) => {
+  const getPaletteColor = useCallback((colorName: keyof typeof palette) => {
     return palette[colorName];
-  };
+  }, []);
 
   // Check if the current theme is dark
-  const isDarkMode = colorScheme === "dark";
+  const isDarkMode = useMemo(() => colorScheme === "dark", [colorScheme]);
 
   // Get the current theme name
   const themeName = colorScheme;
 
-  // Get all colors for the current theme
-  const themeColors = Colors[colorScheme];
-
-  return {
-    colors: themeColors,
-    getColor,
-    getThemeColor,
-    getPaletteColor,
-    isDarkMode,
-    themeName,
-    palette,
-  };
+  return useMemo(
+    () => ({
+      colors: themeColors,
+      getColor,
+      getThemeColor,
+      getPaletteColor,
+      isDarkMode,
+      themeName,
+      palette,
+    }),
+    [
+      themeColors,
+      getColor,
+      getThemeColor,
+      getPaletteColor,
+      isDarkMode,
+      themeName,
+    ]
+  );
 }

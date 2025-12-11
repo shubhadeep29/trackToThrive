@@ -1,6 +1,8 @@
 import { Redirect } from "expo-router";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Index() {
-  // This redirects from the root to the appropriate stack
-  return <Redirect href="/(unauthenticated)/login" />;
+  const { isAuthenticated } = useAuth();
+
+  return <Redirect href={isAuthenticated ? "/dashboard" : "/login"} />;
 }

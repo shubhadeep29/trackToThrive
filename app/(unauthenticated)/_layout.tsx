@@ -4,7 +4,10 @@ export default function UnauthenticatedLayout() {
   return (
     <Stack>
       <Stack.Screen name="login" options={{ headerShown: false }} />
-      <Stack.Screen name="register" options={{ title: "Create Account" }} />
+      <Stack.Screen
+        name="register"
+        options={{ title: "Create Account", headerShown: false }}
+      />
     </Stack>
   );
 }

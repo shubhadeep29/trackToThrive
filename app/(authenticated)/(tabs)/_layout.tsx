@@ -1,25 +1,19 @@
 import { Tabs } from "expo-router";
-import React from "react";
-import { Platform, TouchableOpacity } from "react-native";
-import { useAuth } from "@/hooks/useAuth";
-
+import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useTheme } from "@/hooks/useTheme";
+import { User, Heart, Cube } from "phosphor-react-native";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const { signOut } = useAuth();
   const { colors } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.tint,
-        headerShown: true,
+        headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -28,41 +22,24 @@ export default function TabLayout() {
           },
           default: {},
         }),
-        headerRight: () => (
-          <TouchableOpacity onPress={signOut} style={{ marginRight: 15 }}>
-            <IconSymbol
-              size={24}
-              name="rectangle.portrait.and.arrow.right"
-              color={Colors[colorScheme ?? "light"].tint}
-            />
-          </TouchableOpacity>
-        ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Dashboard",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="profile"
         options={{
-          title: "Explore",
+          title: "Profile",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="gear" color={color} />
+            // <IconSymbol size={28} name="person.fill" color={color} />
+            <User size={28} color={color} />
           ),
         }}
       />

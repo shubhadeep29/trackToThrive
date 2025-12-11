@@ -4,7 +4,7 @@ import {
   ThemeProvider as NavigationThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Redirect, Stack } from "expo-router";
+import { Slot, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -17,9 +17,23 @@ import { ThemeProvider, useThemeContext } from "@/context/ThemeContext";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-function RootLayoutNav() {
+function InitialLayout() {
   const { isAuthenticated, isLoading } = useAuth();
   const { theme } = useThemeContext();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading) {
+      const inAuthGroup = segments[0] === "(authenticated)";
+
+      if (isAuthenticated && !inAuthGroup) {
+        router.replace("/(authenticated)/(tabs)");
+      } else if (!isAuthenticated && segments[0] !== "(unauthenticated)") {
+        router.replace("/login");
+      }
+    }
+  }, [isAuthenticated, isLoading]);
 
   // Show a loading indicator while checking authentication
   if (isLoading) {
@@ -34,17 +48,7 @@ function RootLayoutNav() {
     <NavigationThemeProvider
       value={theme === "dark" ? DarkTheme : DefaultTheme}
     >
-      <Stack screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? (
-          // Authenticated routes
-          <Stack.Screen name="(authenticated)" />
-        ) : (
-          // Unauthenticated routes
-          <Stack.Screen name="(unauthenticated)" />
-        )}
-        {/* Common screens accessible from both stacks */}
-        <Stack.Screen name="+not-found" options={{ presentation: "modal" }} />
-      </Stack>
+      <Slot />
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
     </NavigationThemeProvider>
   );
@@ -68,7 +72,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <RootLayoutNav />
+        <InitialLayout />
       </AuthProvider>
     </ThemeProvider>
   );

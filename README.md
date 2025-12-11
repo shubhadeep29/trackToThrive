@@ -48,3 +48,10 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Project Information
+
+Habit Counter / Daily Tracker
+
+A clean app where users track simple counts like water intake, study hours, steps, expenses, prayers or gym reps.
+You can add charts, streaks and reminders.
